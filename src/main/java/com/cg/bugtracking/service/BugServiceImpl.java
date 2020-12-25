@@ -5,6 +5,8 @@ import java.util.Optional;
 
 import javax.transaction.Transactional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,9 +24,18 @@ public class BugServiceImpl implements BugService {
 	@Autowired
 	private BugRepository bugRepository;
 
+	private static Logger logger=LoggerFactory.getLogger(BugServiceImpl.class);
+	
+	/**
+	 * This method is used to store the object of type bug in the database
+	 * 
+	 * @param bug This is the parameter for the bug Object
+	 * @return Bug This returns the object which is stored in database
+	 */
 	@Transactional
 	@Override
 	public Bug createBug(Bug bug) {
+		logger.info("Enter BugServiceImpl:: method=createBug");
 		Bug bugObj = null;
 		try {
 			bugObj = bugRepository.save(bug);
@@ -32,12 +43,22 @@ public class BugServiceImpl implements BugService {
 		} catch (Exception e) {
 			throw new OperationFailedException(OPERATION_FAILED_CONST + e.getMessage());
 		}
+		logger.info("Exit BugServiceImpl:: method=createBug");
 		return bugObj;
 	}
 
+	
+	/**
+	 * This method is used to update the object of type bug in the database
+	 * 
+	 * @param id  This is the parameter for the primary key of the object
+	 * @param bug This is the parameter for the bug Object
+	 * @return Bug This returns the object which is stored in database
+	 */
 	@Transactional
 	@Override
 	public Bug updateBug(long id, Bug bug) {
+		logger.info("Enter BugServiceImpl:: method=updateBug");
 		Optional<Bug> bugObj = null;
 		Bug updatedBug = null;
 		bugObj = bugRepository.findById(id);
@@ -59,23 +80,38 @@ public class BugServiceImpl implements BugService {
 			}
 
 		}
-
+		logger.info("Exit BugServiceImpl:: method=updateBug");
 		return updatedBug;
 	}
 
+	/**
+	 * This method is used to get the object of type bug from the database
+	 * 
+	 * @param id This is the parameter for the primary key of the object
+	 * @return Bug This returns the object which is stored in database
+	 */
 	@Override
 	public Bug getBug(long id) {
-
+		logger.info("Enter BugServiceImpl:: method=getBug");
 		Optional<Bug> bug = bugRepository.findById(id);
 		
 		if (!bug.isPresent())
 			throw new ResourceNotFoundException(BUG_NOT_FOUND_CONST + id);
 
+		logger.info("Exit BugServiceImpl:: method=getBug");
 		return bug.get();
 	}
 
+	/**
+	 * This method is used to delete the object of type bug from the database
+	 * 
+	 * @param id This is the parameter for the primary key of the object
+	 * @return Bug This returns the object of type Bug which is deleted from the
+	 *         database
+	 */
 	@Override
 	public Bug deleteBug(long id) {
+		logger.info("Enter BugServiceImpl:: method=deleteBug");
 		Optional<Bug> bugObj = bugRepository.findById(id);
 		if (!bugObj.isPresent()) {
 			throw new ResourceNotFoundException(BUG_NOT_FOUND_CONST + id);
@@ -86,17 +122,35 @@ public class BugServiceImpl implements BugService {
 				throw new OperationFailedException(OPERATION_FAILED_CONST +e.getMessage());
 			}			
 		}
-		
+		logger.info("Exit BugServiceImpl:: method=deleteBug");
 		return bugObj.get();
 	}
 	
+	/**
+	 * This method is used to get the list of objects of type bug from the database
+	 * 
+	 * @return List<Bug> This returns the list of objects which is stored in
+	 *         database
+	 */
 	@Override
 	public List<Bug> getAllBugs() {
+		logger.info("Enter BugServiceImpl:: method=getAllBugs");
+		logger.info("Exit BugServiceImpl:: method=getAllBugs");
 		return bugRepository.findAll();
 	}
 
+	/**
+	 * This method is used to get the list of objects of type bug from the database
+	 * with status mentioned
+	 * 
+	 * @param status This is the parameter for selecting the object with status
+	 * @return List<Bug>This returns the list of Bug objects which is stored in
+	 *         database with a specific status
+	 */
 	@Override
 	public List<Bug> getAllBugsByStatus(String status) {
+		logger.info("Enter BugServiceImpl:: method=getAllBugsByStatus");
+		logger.info("Exit BugServiceImpl:: method=getAllBugsByStatus");
 		return bugRepository.findByStatus(status);
 	}
 
