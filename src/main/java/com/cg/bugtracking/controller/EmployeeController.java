@@ -153,11 +153,12 @@ public class EmployeeController {
 	 */
 	@PutMapping("/remove-bug/{eid}/{bid}")
 	@ApiOperation(value = "remove a bug from employee")
-	public ResponseEntity<?> assignBugFromEmployee(@PathVariable("eid") long employeeId,@PathVariable("bid") long bugId) {
+	public ResponseEntity<?> removeBugFromEmployee(@PathVariable("eid") long employeeId,@PathVariable("bid") long bugId) {
 		Bug bug=bugService.getBug(bugId);
 		Employee employee=employeeService.getEmployee(employeeId);
 		BaseResponse baseResponse = new BaseResponse();
 		if(employee.getBugList().contains(bug)) {
+			bug.setAssignee(null);
 			employee.getBugList().remove(bug);
 			Employee employeeObj=employeeService.updateEmployee(employeeId, employee);
 			baseResponse.setStatusCode(1);
