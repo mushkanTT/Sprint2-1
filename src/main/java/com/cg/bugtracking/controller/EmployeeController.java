@@ -5,6 +5,9 @@ import java.util.List;
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,79 +34,123 @@ import io.swagger.annotations.ApiOperation;
 @Api(value="Employee Controller", description="Operations on employee")
 public class EmployeeController {
 	
+	private static Logger logger=LoggerFactory.getLogger(EmployeeController.class);
+	
 	@Autowired
 	private EmployeeService employeeService;	
 	
 	@Autowired
 	private BugService bugService;
 	
+	/**
+	 * This method is used to create employee to the database.
+	 * 
+	 * @param employee This is the argument to createEmployee method
+	 * @return object of created employee
+	 */
 	@PostMapping("/")
 	@ApiOperation(value = "Add an employee")
 	public ResponseEntity<?> createEmployee(@Valid @RequestBody Employee employee){
+		logger.info("Enter EmployeeController :: method=createEmployee");
 		
 		Employee employeeObj = employeeService.createEmployee(employee);
 		BaseResponse baseResponse = new BaseResponse();
 		baseResponse.setStatusCode(1);
-		baseResponse.setResponse(employeeObj);		
+		baseResponse.setResponse(employeeObj);	
+		
+		logger.info("Exit EmployeeController :: method=createEmployee");
 		return new ResponseEntity<>(baseResponse, HttpStatus.CREATED);
 	}
 	
-	
+	/**
+	 * This method is used to get details of employee from the database.
+	 * 
+	 * @param long This is the argument to getEmployee method
+	 * @return object of employee for given id.
+	 */
 	@GetMapping("/{id}")
 	@ApiOperation(value = "Search an employee with an ID",response = Employee.class)
 	public ResponseEntity<?> getEmployee(@PathVariable("id") @Min(1) long empId) {
-	
+		logger.info("Enter EmployeeController :: method=getEmployee");
+		
 		Employee employeeObj = employeeService.getEmployee(empId);	
 		BaseResponse baseResponse = new BaseResponse();
 		baseResponse.setStatusCode(1);
 		baseResponse.setResponse(employeeObj);	
+		
+		logger.info("Exit EmployeeController :: method=getEmployee");
 		return new ResponseEntity<>(baseResponse, HttpStatus.OK);		
 		
 	}
 	
+	/**
+	 * This method is used to update employee to the database.
+	 * 
+	 * @param long and employee This is the argument to updateProduct method
+	 * @return Updated employee object
+	 */
 	@PutMapping("/{id}")
 	@ApiOperation(value = "Update an employee")
 	public ResponseEntity<?> updateEmployee(@PathVariable("id") @Min(1) long empId,@Valid @RequestBody Employee employee) {
-			
+		logger.info("Enter EmployeeController :: method=updateEmployee");
 		Employee employeeObj = employeeService.updateEmployee(empId,employee);	
 		
 		BaseResponse baseResponse = new BaseResponse();
 		baseResponse.setStatusCode(1);
 		baseResponse.setResponse(employeeObj);	
 		
+		logger.info("Exit EmployeeController :: method=updateEmployee");
 		return new ResponseEntity<>(baseResponse, HttpStatus.OK);				
 	}
 	
+	/**
+	 * This method is used to delete employee to the database.
+	 * 
+	 * @param long This is the argument to deleteEmployee method
+	 * @return object of deleted employee
+	 */
 	@DeleteMapping("/{id}")
 	@ApiOperation(value = "Delete an employee")
 	public ResponseEntity<?> deleteEmployee(@PathVariable("id") @Min(1) long empId) {
-		
+		logger.info("Enter EmployeeController :: method=deleteEmployee");
 		Employee employeeObj = employeeService.deleteEmployee(empId);
 		
 		BaseResponse baseResponse = new BaseResponse();
 		baseResponse.setStatusCode(1);
 		baseResponse.setResponse(employeeObj);	
 		
+		logger.info("Exit EmployeeController :: method=deleteEmployee");
 		return new ResponseEntity<>(baseResponse, HttpStatus.OK);			
 	}
 	
+	/**
+	 * This method is used to get list of employee from the database.
+	 * 
+	 * @param  There is no argument to getAllEmployee method
+	 * @return List<Employee>
+	 */
 	@GetMapping("/all")
 	@ApiOperation(value = "Show all employee")
 	public ResponseEntity<?> getAllEmployees() {
-		
+		logger.info("Enter EmployeeController :: method=getAllEmployees");
 		List<Employee> Employees = employeeService.getAllEmployees();	
 		
 		BaseResponse baseResponse = new BaseResponse();
 		baseResponse.setStatusCode(1);
 		baseResponse.setResponse(Employees);	
 		
+		logger.info("Exit EmployeeController :: method=getAllEmployees");
 		return new ResponseEntity<>(baseResponse, HttpStatus.OK);		
 		
 	}
 	
 
-	
-	
+	/**
+	 * This method is used to get updated employee after deleting bug.
+	 * 
+	 * @param  Here are the arguments are bugId and employeeId
+	 * @return Employee object.
+	 */
 	@PutMapping("/remove-bug/{eid}/{bid}")
 	@ApiOperation(value = "remove a bug from employee")
 	public ResponseEntity<?> assignBugFromEmployee(@PathVariable("eid") long employeeId,@PathVariable("bid") long bugId) {
