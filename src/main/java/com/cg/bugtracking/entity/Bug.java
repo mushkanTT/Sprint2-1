@@ -127,22 +127,6 @@ public class Bug {
 	}
 	
 
-	public Bug(long bugId, String bugDesc, @NotEmpty(message = "Bug status should not be empty") String status,
-			LocalDate startDate, LocalDate endDate, String assignee,
-			@NotEmpty(message = "Bug type should not be empty") String type,
-			@NotEmpty(message = "Bug priority should not be empty") String priority) {
-		super();
-		this.bugId = bugId;
-		this.bugDesc = bugDesc;
-		this.status = status;
-		this.startDate = startDate;
-		this.endDate = endDate;
-		this.assignee = assignee;
-		this.type = type;
-		this.priority = priority;
-	}
-
-
 	
 
 }
